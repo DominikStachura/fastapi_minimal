@@ -14,16 +14,10 @@ app.add_middleware(
     allow_origins=settings.ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
-    # expose_headers=["x-total-count"]
+    allow_headers=["*"]
 )
 
 app.include_router(item.router)
-
-
-# app.include_router(bookie.router)
-# app.include_router(bet.router)
-# app.include_router(selections.router)
 
 
 @app.get("/healthcheck")
