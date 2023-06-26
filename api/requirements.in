@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+alembic
+asyncpg
+sqlalchemy==1.4.41
+async-sqlalchemy
+sqlalchemy2-stubs
+redis>=4.2.0rc1

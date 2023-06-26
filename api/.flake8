@@ -1,0 +1,32 @@
+[flake8]
+max-line-length = 120
+
+inline-quotes = double
+multiline-quotes = double
+docstring-quotes = double
+
+ignore =
+    # B008 Do not perform function calls in argument defaults
+    # C812 missing trailing comma
+    # C813 missing trailing comma in Python 3
+    # C815 missing trailing comma in Python 3.5+
+    B008
+    C812,
+    C813,
+    C815,
+
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    .coverage,
+    .DS_Store,
+    .idea,
+    .pytest_cache
+    migrations
+    app/__init__.py
+
+
+# McCabe Cyclomatic Complexity
+max-complexity = 10

@@ -1,0 +1,12 @@
+-c requirements.txt
+flake8
+flake8-quotes
+mypy
+pytest
+pytest-asyncio
+pytest-mock
+httpx
+pydantic-factories
+types-redis
+coverage
+pytest-cov

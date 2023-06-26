@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    depends_on:
+      - db
+      - redis
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app
+    env_file:
+      - .env
+    networks:
+      - fastapi-app
+
+
+  db:
+    container_name: db
+    image: postgres
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    networks:
+      - fastapi-app
+
+
+  #  web:
+  #    build:
+  #      context: .
+  #      dockerfile: web/Dockerfile
+  #    volumes:
+  #      - ./web:/app
+  #      - /app/node_modules/
+  #    environment:
+  #      - REACT_APP_AXIOS_BASE_URL=http://127.0.0.1:8000
+  #      - REACT_APP_API_URL=http://127.0.0.1:8000
+  #    depends_on:
+  #      - api
+  #    command: npm start
+  #    ports:
+  #      - "3000:3000"
+  #    networks:
+  #      - fastapi-app
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - fastapi-app
+
+
+
+
+networks:
+  fastapi-app:
+    driver: bridge
