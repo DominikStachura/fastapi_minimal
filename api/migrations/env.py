@@ -4,8 +4,9 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
-
-from app.conf import settings  # NOQA
+from sqlmodel import SQLModel
+from app.schemas.item import Item
+from app.conf import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,9 +21,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from app.models import Base
-
-target_metadata = Base.metadata
+target_metadata = SQLModel.metadata
 
 
 # other values from the config, defined by the needs of env.py,

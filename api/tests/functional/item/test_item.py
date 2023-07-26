@@ -4,11 +4,11 @@ import httpx
 from fastapi import status
 from sqlalchemy import select
 
-from app.models import ItemModel
+from app.schemas.item import Item
 
 
 @pytest.mark.asyncio
-async def test_get_items(test_client: httpx.AsyncClient, item_in_db: ItemModel):
+async def test_get_items(test_client: httpx.AsyncClient, item_in_db: Item):
     response = await test_client.get("/item/")
     assert response.status_code == status.HTTP_200_OK
     response_data = response.json()
@@ -19,7 +19,7 @@ async def test_get_items(test_client: httpx.AsyncClient, item_in_db: ItemModel):
 
 
 @pytest.mark.asyncio
-async def test_get_item(test_client: httpx.AsyncClient, item_in_db: ItemModel):
+async def test_get_item(test_client: httpx.AsyncClient, item_in_db: Item):
     response = await test_client.get(f"/item/{item_in_db.id}/")
     assert response.status_code == status.HTTP_200_OK
     response_data = response.json()
@@ -32,24 +32,24 @@ async def test_create_item(test_client: httpx.AsyncClient, db):
     response = await test_client.post("/item/", json={"name": "created_item"})
     assert response.status_code == status.HTTP_200_OK
     created_item_id = response.json()["id"]
-    created_item = (await db.execute(select(ItemModel).where(ItemModel.id == created_item_id))).scalar()
+    created_item = (await db.execute(select(Item).where(Item.id == created_item_id))).scalar()
     assert created_item.name == "created_item"
     # should be true by default
     assert created_item.is_active is True
 
 
 @pytest.mark.asyncio
-async def test_create_item_already_exists(test_client: httpx.AsyncClient, item_in_db: ItemModel):
+async def test_create_item_already_exists(test_client: httpx.AsyncClient, item_in_db: Item):
     response = await test_client.post("/item/", json={"name": item_in_db.name})
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
 @pytest.mark.asyncio
-async def test_update_item(test_client: httpx.AsyncClient, db, item_in_db: ItemModel):
+async def test_update_item(test_client: httpx.AsyncClient, db, item_in_db: Item):
     assert item_in_db.is_active is True
     await test_client.put(f"/item/{item_in_db.id}/", json={"is_active": False})
     await db.refresh(item_in_db)
-    updated_item = (await db.execute(select(ItemModel).where(ItemModel.id == item_in_db.id))).scalar()
+    updated_item = (await db.execute(select(Item).where(Item.id == item_in_db.id))).scalar()
     assert updated_item.is_active is False
 
 
@@ -60,11 +60,11 @@ async def test_update_item_not_exist(test_client: httpx.AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_delete_item(test_client: httpx.AsyncClient, db, item_in_db: ItemModel):
-    item = (await db.execute(select(ItemModel).where(ItemModel.id == item_in_db.id))).scalar()
+async def test_delete_item(test_client: httpx.AsyncClient, db, item_in_db: Item):
+    item = (await db.execute(select(Item).where(Item.id == item_in_db.id))).scalar()
     assert item
     await test_client.delete(f"/item/{item_in_db.id}/")
-    deleted = (await db.execute(select(ItemModel).where(ItemModel.id == item_in_db.id))).scalar()
+    deleted = (await db.execute(select(Item).where(Item.id == item_in_db.id))).scalar()
     assert not deleted
 
 
