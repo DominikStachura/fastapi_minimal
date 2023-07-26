@@ -39,6 +39,12 @@ async def test_create_item(test_client: httpx.AsyncClient, db):
 
 
 @pytest.mark.asyncio
+async def test_create_item_already_exists(test_client: httpx.AsyncClient, item_in_db: ItemModel):
+    response = await test_client.post("/item/", json={"name": item_in_db.name})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.asyncio
 async def test_update_item(test_client: httpx.AsyncClient, db, item_in_db: ItemModel):
     assert item_in_db.is_active is True
     await test_client.put(f"/item/{item_in_db.id}/", json={"is_active": False})
@@ -48,9 +54,21 @@ async def test_update_item(test_client: httpx.AsyncClient, db, item_in_db: ItemM
 
 
 @pytest.mark.asyncio
+async def test_update_item_not_exist(test_client: httpx.AsyncClient):
+    response = await test_client.put("/item/999/", json={"is_active": False})
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+@pytest.mark.asyncio
 async def test_delete_item(test_client: httpx.AsyncClient, db, item_in_db: ItemModel):
     item = (await db.execute(select(ItemModel).where(ItemModel.id == item_in_db.id))).scalar()
     assert item
     await test_client.delete(f"/item/{item_in_db.id}/")
     deleted = (await db.execute(select(ItemModel).where(ItemModel.id == item_in_db.id))).scalar()
     assert not deleted
+
+
+@pytest.mark.asyncio
+async def test_delete_item_not_exist(test_client: httpx.AsyncClient):
+    response = await test_client.delete("/item/999/")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
