@@ -43,7 +43,7 @@ def run_migrations_offline() -> None:
 
     """
     context.configure(
-        url=settings.POSTGRES_URI,
+        url=str(settings.POSTGRES_URI),
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -67,7 +67,7 @@ async def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    engine = create_async_engine(settings.POSTGRES_URI, future=True)
+    engine = create_async_engine(str(settings.POSTGRES_URI), future=True)
 
     async with engine.connect() as connection:
         await connection.run_sync(do_run_migrations)

@@ -15,7 +15,8 @@ repository. Docker-compose will automatically take all envs from the file and us
 If you want to build Production Ready API Container you can use the following command:  
 _docker build -f api/Dockerfile --target base --tag api ._  
 By setting _target_ to _base_ you can make sure that all development requirements, such as MyPy, Flake etc. will not be
-installed inside container.
+installed inside container.  
+Swagger documentation can be accessed using _/docs_ endpoint.
 
 ## Migrations
 
@@ -48,3 +49,6 @@ docker-compose exec -T api pytest tests
 docker-compose stop
 ```
 
+## Frontend
+There is minimal frontend written in react that gives an overview on how to interact with the api.
+It can be built using _docker-compose up_.

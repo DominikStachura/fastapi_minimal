@@ -1,8 +1,8 @@
 fastapi
 uvicorn
 sqlmodel
+pydantic-settings
 alembic
 asyncpg
 async-sqlalchemy
-sqlalchemy2-stubs
 redis>=4.2.0rc1

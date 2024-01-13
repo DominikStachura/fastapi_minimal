@@ -30,23 +30,23 @@ services:
       - fastapi-app
 
 
-  #  web:
-  #    build:
-  #      context: .
-  #      dockerfile: web/Dockerfile
-  #    volumes:
-  #      - ./web:/app
-  #      - /app/node_modules/
-  #    environment:
-  #      - REACT_APP_AXIOS_BASE_URL=http://127.0.0.1:8000
-  #      - REACT_APP_API_URL=http://127.0.0.1:8000
-  #    depends_on:
-  #      - api
-  #    command: npm start
-  #    ports:
-  #      - "3000:3000"
-  #    networks:
-  #      - fastapi-app
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    volumes:
+      - ./web:/app
+      - /app/node_modules/
+    environment:
+      - REACT_APP_AXIOS_BASE_URL=http://localhost:8000
+      - REACT_APP_API_URL=http://localhost:8000
+    depends_on:
+      - api
+    command: npm start
+    ports:
+      - "3000:3000"
+    networks:
+      - fastapi-app
 
   redis:
     image: redis
