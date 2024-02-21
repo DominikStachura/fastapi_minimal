@@ -4,8 +4,9 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
-
-from app.conf import settings  # NOQA
+from sqlmodel import SQLModel
+from app.schemas.item import Item
+from app.conf import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,9 +21,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from app.models import Base
-
-target_metadata = Base.metadata
+target_metadata = SQLModel.metadata
 
 
 # other values from the config, defined by the needs of env.py,
@@ -44,7 +43,7 @@ def run_migrations_offline() -> None:
 
     """
     context.configure(
-        url=settings.POSTGRES_URI,
+        url=str(settings.POSTGRES_URI),
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -68,7 +67,7 @@ async def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    engine = create_async_engine(settings.POSTGRES_URI, future=True)
+    engine = create_async_engine(str(settings.POSTGRES_URI), future=True)
 
     async with engine.connect() as connection:
         await connection.run_sync(do_run_migrations)

@@ -1,11 +1,11 @@
 import pytest_asyncio
 
-from app.models import ItemModel
+from app.schemas.item import Item
 
 
 @pytest_asyncio.fixture
 async def item_in_db(db):
-    item = ItemModel(
+    item = Item(
         name="test_item"
     )
     db.add(item)

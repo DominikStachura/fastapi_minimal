@@ -1,21 +1,18 @@
-from pydantic import BaseModel
+from sqlmodel import SQLModel, Field
 
 
-class ItemBase(BaseModel):
+class ItemBase(SQLModel):
     name: str
-
-    class Config:
-        orm_mode = True
 
 
 class ItemCreate(ItemBase):
     pass
 
 
-class ItemUpdate(BaseModel):
+class ItemUpdate(SQLModel):
     is_active: bool | None
 
 
-class Item(ItemBase):
-    id: int
+class Item(ItemBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     is_active: bool = True
