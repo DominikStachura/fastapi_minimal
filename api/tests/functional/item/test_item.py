@@ -28,6 +28,12 @@ async def test_get_item(test_client: httpx.AsyncClient, item_in_db: Item):
 
 
 @pytest.mark.asyncio
+async def test_get_item_not_exist(test_client: httpx.AsyncClient):
+    response = await test_client.get("/item/1/")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+@pytest.mark.asyncio
 async def test_create_item(test_client: httpx.AsyncClient, db):
     response = await test_client.post("/item/", json={"name": "created_item"})
     assert response.status_code == status.HTTP_200_OK
@@ -48,7 +54,6 @@ async def test_create_item_already_exists(test_client: httpx.AsyncClient, item_i
 async def test_update_item(test_client: httpx.AsyncClient, db, item_in_db: Item):
     assert item_in_db.is_active is True
     await test_client.put(f"/item/{item_in_db.id}/", json={"is_active": False})
-    await db.refresh(item_in_db)
     updated_item = (await db.execute(select(Item).where(Item.id == item_in_db.id))).scalar()
     assert updated_item.is_active is False
 
